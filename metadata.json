@@ -1,0 +1,6 @@
+{
+  "name": "CivicConnect AI",
+  "description": "AI-Powered Societal Challenge Crowdsourcing Platform for Smart India Hackathon 2026 - Disaster Management & Civic Problem Resolution",
+  "requestFramePermissions": ["geolocation", "microphone"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
