@@ -191,7 +191,7 @@ export const ChallengeDetailsPage: React.FC = () => {
               <span>Reported {ch.createdAt}</span>
             </span>
             <span>•</span>
-            <span>Reporter: <strong className="text-slate-700">{ch.reportedBy.name}</strong></span>
+            <span>Reporter: <strong className="text-slate-700">{ch.reporterName}</strong></span>
           </div>
         </div>
 
@@ -426,7 +426,7 @@ export const ChallengeDetailsPage: React.FC = () => {
                 <h3 className="text-sm font-bold text-slate-900">AI Matched Partners</h3>
               </div>
               <span className="text-[10px] font-extrabold px-2 py-0.5 rounded bg-blue-100 text-blue-800">
-                SIH Match Engine
+                Civic Match Engine
               </span>
             </div>
 

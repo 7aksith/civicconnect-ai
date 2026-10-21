@@ -6,6 +6,7 @@ import { ToastContainer } from './components/common/ToastContainer';
 
 // Pages
 import { LandingPage } from './pages/LandingPage';
+import { LoginPage } from './pages/LoginPage';
 import { DashboardPage } from './pages/DashboardPage';
 import { ReportChallengePage } from './pages/ReportChallengePage';
 import { ExploreChallengesPage } from './pages/ExploreChallengesPage';
@@ -25,11 +26,19 @@ const AppContent: React.FC = () => {
   const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 
-  // If user is on the public presentation landing page
   if (currentView === 'landing') {
     return (
       <div className="min-h-screen bg-slate-50">
         <LandingPage />
+        <ToastContainer />
+      </div>
+    );
+  }
+
+  if (currentView === 'login' || currentView === 'login-admin') {
+    return (
+      <div className="min-h-screen bg-slate-950">
+        <LoginPage />
         <ToastContainer />
       </div>
     );
@@ -70,31 +79,37 @@ const AppContent: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50/70 text-slate-900 flex antialiased">
-      {/* Sidebar Navigation */}
-      <Sidebar
-        isMobileOpen={isMobileNavOpen}
-        onCloseMobile={() => setIsMobileNavOpen(false)}
-      />
+    <div className="min-h-screen relative overflow-hidden bg-[radial-gradient(circle_at_top_left,_rgba(59,130,246,0.12),transparent_22%),radial-gradient(circle_at_bottom_right,_rgba(15,118,110,0.12),transparent_26%),linear-gradient(135deg,#f8fafc_0%,#eef3ff_30%,#f4f7fb_60%,#edf7f6_100%)] text-slate-900 antialiased">
+      <div className="absolute inset-0 opacity-80 [background-image:linear-gradient(to_right,rgba(148,163,184,0.10)_1px,transparent_1px),linear-gradient(to_bottom,rgba(148,163,184,0.10)_1px,transparent_1px)] [background-size:28px_28px]" />
 
-      {/* Main Content Area */}
-      <div className="flex-1 flex flex-col min-w-0">
-        {/* Top Navbar */}
-        <Navbar
-          onOpenMobileMenu={() => setIsMobileNavOpen(true)}
-          searchQuery={searchQuery}
-          setSearchQuery={(q) => {
-            setSearchQuery(q);
-            if (currentView !== 'explore') {
-              setCurrentView('explore');
-            }
-          }}
+      <div className="relative z-10 flex min-h-screen">
+        {/* Sidebar Navigation */}
+        <Sidebar
+          isMobileOpen={isMobileNavOpen}
+          onCloseMobile={() => setIsMobileNavOpen(false)}
         />
 
-        {/* Page View Container */}
-        <main className="flex-1 p-4 sm:p-6 lg:p-8 max-w-7xl w-full mx-auto">
-          {renderCurrentView()}
-        </main>
+        {/* Main Content Area */}
+        <div className="flex-1 flex flex-col min-w-0">
+          {/* Top Navbar */}
+          <Navbar
+            onOpenMobileMenu={() => setIsMobileNavOpen(true)}
+            searchQuery={searchQuery}
+            setSearchQuery={(q) => {
+              setSearchQuery(q);
+              if (currentView !== 'explore') {
+                setCurrentView('explore');
+              }
+            }}
+          />
+
+          {/* Page View Container */}
+          <main className="flex-1 p-4 sm:p-6 lg:p-8 max-w-7xl w-full mx-auto">
+            <div className="rounded-[30px] border border-slate-200/70 bg-white/70 shadow-[0_24px_70px_rgba(15,23,42,0.08)] backdrop-blur-xl p-2 sm:p-3">
+              {renderCurrentView()}
+            </div>
+          </main>
+        </div>
       </div>
 
       {/* Floating Toast Notification Stack */}

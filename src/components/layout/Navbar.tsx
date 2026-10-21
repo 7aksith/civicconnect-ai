@@ -49,7 +49,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   ];
 
   return (
-    <header className="h-16 bg-white border-b border-slate-200/90 sticky top-0 z-30 px-4 lg:px-8 flex items-center justify-between gap-4">
+    <header className="h-16 bg-white/80 backdrop-blur-xl border-b border-slate-200/80 sticky top-0 z-30 px-4 lg:px-8 flex items-center justify-between gap-4 shadow-[0_1px_0_rgba(15,23,42,0.04)]">
       {/* Left: Mobile Toggle & Brand (on mobile) */}
       <div className="flex items-center gap-3">
         <button
@@ -90,7 +90,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 // optionally route
               }
             }}
-            placeholder="Search flood reports, infrastructure, city, or challenge ID (#CC-SIH-901)..."
+            placeholder="Search flood reports, infrastructure, city, or challenge ID (#CC-901)..."
             className="w-full bg-slate-100/80 hover:bg-slate-100 focus:bg-white text-slate-900 placeholder:text-slate-400 text-xs font-medium pl-10 pr-4 py-2.5 rounded-xl border border-transparent focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 outline-none transition-all"
           />
         </div>
@@ -98,10 +98,10 @@ export const Navbar: React.FC<NavbarProps> = ({
 
       {/* Right: Quick Report, Persona Switcher & Notifications */}
       <div className="flex items-center gap-2.5 sm:gap-3">
-        {/* Hackathon Badge */}
+        {/* Operational status badge */}
         <div className="hidden xl:flex items-center gap-1.5 px-2.5 py-1 bg-blue-50 text-blue-800 rounded-full border border-blue-200/80 text-[11px] font-bold">
           <span className="w-2 h-2 rounded-full bg-blue-600 animate-pulse" />
-          <span>SIH 2026 • SIH26043</span>
+          <span>Live Operations</span>
         </div>
 
         {/* Quick Report Button */}
@@ -234,7 +234,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               <div className="absolute right-0 mt-2 w-72 bg-white rounded-2xl shadow-2xl border border-slate-200 z-50 overflow-hidden animate-in fade-in zoom-in-95 duration-150">
                 <div className="p-3.5 bg-slate-50 border-b border-slate-100">
                   <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">
-                    SIH Demo: Switch Persona
+                    Switch Role View
                   </div>
                   <p className="text-xs text-slate-600">
                     Experience CivicConnect AI through citizen, authority, or partner roles.

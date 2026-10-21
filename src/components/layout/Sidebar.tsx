@@ -60,7 +60,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isMobileOpen, onCloseMobile })
   };
 
   const content = (
-    <div className="flex flex-col h-full bg-slate-900 text-slate-300 border-r border-slate-800 select-none">
+    <div className="flex flex-col h-full bg-slate-950 text-slate-300 border-r border-slate-800/80 select-none shadow-[8px_0_24px_rgba(15,23,42,0.16)]">
       {/* Brand Header */}
       <div className="p-5 pb-4 border-b border-slate-800/80">
         <div
@@ -77,7 +77,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isMobileOpen, onCloseMobile })
             </div>
             <div className="text-[10px] text-slate-400 font-semibold flex items-center gap-1">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
-              <span>SIH 2026 • SIH26043</span>
+              <span>Operations Dashboard</span>
             </div>
           </div>
         </div>
@@ -199,15 +199,15 @@ export const Sidebar: React.FC<SidebarProps> = ({ isMobileOpen, onCloseMobile })
         </div>
       </div>
 
-      {/* Footer: SIH 2026 Team Credentials */}
+      {/* Footer: Platform info */}
       <div className="p-4 bg-slate-950/60 border-t border-slate-800/80">
         <div className="flex items-center gap-3">
           <div className="w-8 h-8 rounded-lg bg-blue-900/50 border border-blue-700/50 flex items-center justify-center text-blue-300 font-black text-xs shrink-0">
-            TM
+            CC
           </div>
           <div className="min-w-0">
-            <div className="text-xs font-bold text-white truncate">Team Tech Manias</div>
-            <div className="text-[10px] text-slate-400 truncate">Theme: Disaster Management</div>
+            <div className="text-xs font-bold text-white truncate">CivicConnect AI</div>
+            <div className="text-[10px] text-slate-400 truncate">Disaster Response Platform</div>
           </div>
         </div>
       </div>

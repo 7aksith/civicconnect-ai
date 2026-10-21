@@ -250,7 +250,7 @@ export const ImpactDashboardPage: React.FC = () => {
               <Sparkles size={18} />
             </div>
             <div>
-              <h3 className="text-base font-bold">SIH AI Acceleration Gains</h3>
+              <h3 className="text-base font-bold">AI Acceleration Gains</h3>
               <span className="text-[10px] text-slate-400">Benchmarked vs. Manual Helpline Protocols</span>
             </div>
           </div>

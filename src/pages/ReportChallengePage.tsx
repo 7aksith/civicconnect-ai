@@ -151,8 +151,92 @@ export const ReportChallengePage: React.FC = () => {
     const finalSeverity = aiResult?.severity || perceivedUrgency;
     const finalPriorityScore = aiResult?.priorityScore || 85;
 
+    const now = new Date().toISOString();
+
+    const newChallenge: Challenge = {
+      id: newId,
+      title: finalTitle,
+      description: finalDescription,
+      category,
+      severity: finalSeverity,
+      status: 'AI_Verified',
+      priorityScore: finalPriorityScore,
+      progressPercent: 20,
+      location: {
+        address,
+        city,
+        state: stateName,
+        pincode,
+        lat: locationCoords.lat,
+        lng: locationCoords.lng,
+      },
+      reporterId: currentUser.id,
+      reporterName: currentUser.name,
+      reporterRole: currentUser.role,
+      createdAt: now,
+      updatedAt: now,
+      supportersCount: 1,
+      isSupportedByMe: true,
+      evidence: {
+        images:
+          uploadedImages.length > 0
+            ? uploadedImages
+            : [
+                'https://images.unsplash.com/photo-1547683905-f686c993aae5?auto=format&fit=crop&w=800&q=80',
+              ],
+        voiceAudio: voiceNote
+          ? {
+              durationSeconds: voiceNote.durationSeconds,
+              transcript: voiceNote.transcript,
+            }
+          : undefined,
+      },
+      matchedPartners: [],
+      aiAnalysis:
+        aiResult || {
+          category,
+          severity: finalSeverity,
+          priorityScore: finalPriorityScore,
+          confidenceScore: 94,
+          affectedPopulationEstimate: estimatedPeople,
+          duplicatesDetected: [],
+          analysisRationale: [
+            'Direct citizen visual and auditory telemetry verified.',
+            'Threat assessment flagged potential electrical hazard.',
+          ],
+          recommendedAction:
+            'Rapid drain de-silting and municipal water pump installation.',
+          hazardType: `${category} Event`,
+          urgencyLevel:
+            finalSeverity === 'Critical' ? 'Immediate' : 'Within 24h',
+          matchedKeywords: [
+            'waterlogging',
+            'flooding',
+            'infrastructure',
+          ],
+        },
+      timelineEvents: [
+        {
+          status: 'Reported',
+          title: 'Challenge Submitted',
+          description:
+            'Geotagged crowdsourced report registered by citizen.',
+          timestamp: now,
+          actor: currentUser.name,
+        },
+        {
+          status: 'AI_Verified',
+          title: 'AI Classification Completed',
+          description: `Classified as ${category} with severity ${finalSeverity}.`,
+          timestamp: now,
+          actor: 'CivicConnect AI Engine',
+        },
+      ],
+      comments: [],
+    };
+
     try {
-      const response = await fetch('http://localhost:5000/reports', {
+      const response = await fetch('/api/reports', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -181,103 +265,15 @@ export const ReportChallengePage: React.FC = () => {
       }
 
       const savedReport = await response.json();
-
-      console.log('✅ Report saved to MySQL:', savedReport);
-
-      const now = new Date().toISOString();
-
-      const newChallenge: Challenge = {
-        id: newId,
-        title: finalTitle,
-        description: finalDescription,
-        category,
-        severity: finalSeverity,
-        status: 'AI_Verified',
-        priorityScore: finalPriorityScore,
-        progressPercent: 20,
-        location: {
-          address,
-          city,
-          state: stateName,
-          pincode,
-          lat: locationCoords.lat,
-          lng: locationCoords.lng,
-        },
-        reporterId: currentUser.id,
-        reporterName: currentUser.name,
-        reporterRole: currentUser.role,
-        createdAt: now,
-        updatedAt: now,
-        supportersCount: 1,
-        isSupportedByMe: true,
-        evidence: {
-          images:
-            uploadedImages.length > 0
-              ? uploadedImages
-              : [
-                  'https://images.unsplash.com/photo-1547683905-f686c993aae5?auto=format&fit=crop&w=800&q=80',
-                ],
-          voiceAudio: voiceNote
-            ? {
-                durationSeconds: voiceNote.durationSeconds,
-                transcript: voiceNote.transcript,
-              }
-            : undefined,
-        },
-        matchedPartners: [],
-        aiAnalysis:
-          aiResult || {
-            category,
-            severity: finalSeverity,
-            priorityScore: finalPriorityScore,
-            confidenceScore: 94,
-            affectedPopulationEstimate: estimatedPeople,
-            duplicatesDetected: [],
-            analysisRationale: [
-              'Direct citizen visual and auditory telemetry verified.',
-              'Threat assessment flagged potential electrical hazard.',
-            ],
-            recommendedAction:
-              'Rapid drain de-silting and municipal water pump installation.',
-            hazardType: `${category} Event`,
-            urgencyLevel:
-              finalSeverity === 'Critical' ? 'Immediate' : 'Within 24h',
-            matchedKeywords: [
-              'waterlogging',
-              'flooding',
-              'infrastructure',
-            ],
-          },
-        timelineEvents: [
-          {
-            status: 'Reported',
-            title: 'Challenge Submitted',
-            description:
-              'Geotagged crowdsourced report registered by citizen.',
-            timestamp: now,
-            actor: currentUser.name,
-          },
-          {
-            status: 'AI_Verified',
-            title: 'AI Classification Completed',
-            description: `Classified as ${category} with severity ${finalSeverity}.`,
-            timestamp: now,
-            actor: 'CivicConnect AI Engine',
-          },
-        ],
-        comments: [],
-      };
-
-      addNewChallenge(newChallenge);
-      setActiveChallengeId(newId);
-      setCurrentView('challenge-detail');
+      console.log('✅ Report saved to backend:', savedReport);
     } catch (error) {
-      console.error('❌ Error submitting report:', error);
-
-      alert(
-        'Could not save the report. Please make sure the CivicConnect backend is running and CORS is enabled.'
-      );
+      console.error('⚠️ Backend save failed, storing locally:', error);
+      // Continue with local save so the report still appears in My Reports.
     }
+
+    addNewChallenge(newChallenge);
+    setActiveChallengeId(newId);
+    setCurrentView('my-reports');
   };
 
   return (
