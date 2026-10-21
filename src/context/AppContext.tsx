@@ -38,6 +38,16 @@ export interface Toast {
 interface AppContextType {
   currentUser: User;
 
+  isAuthenticated: boolean;
+
+  loginWithCredentials: (
+    email: string,
+    password: string,
+    mode: 'user' | 'admin'
+  ) => { success: boolean; message: string };
+
+  logout: () => void;
+
   switchUserRole: (role: UserRole) => void;
 
   updateUserProfile: (updates: Partial<User>) => void;
@@ -126,13 +136,136 @@ export const AppProvider = ({
     mockUsers.citizen
   );
 
+  const [isAuthenticated, setIsAuthenticated] =
+    useState<boolean>(false);
+
+  const STORAGE_KEY = 'civicconnect_saved_accounts_v1';
+
+  const buildDisplayNameFromEmail = (
+    email: string,
+    fallbackName: string
+  ) => {
+    const normalized = email.trim().toLowerCase();
+    if (!normalized || !normalized.includes('@')) {
+      return fallbackName;
+    }
+
+    const localPart = normalized.split('@')[0];
+    const cleaned = localPart
+      .split(/[._+-]+/g)
+      .map((part) => part.replace(/\d+$/g, '').trim())
+      .filter(Boolean)
+      .join(' ')
+      .replace(/\s+/g, ' ')
+      .trim();
+
+    if (!cleaned) {
+      return fallbackName;
+    }
+
+    return cleaned
+      .split(' ')
+      .filter(Boolean)
+      .map((part) => {
+        const cleanedPart = part.replace(/\d+$/g, '');
+        return cleanedPart
+          ? cleanedPart.charAt(0).toUpperCase() + cleanedPart.slice(1)
+          : '';
+      })
+      .filter(Boolean)
+      .join(' ');
+  };
+
+  const buildUserFromCredentials = (
+    email: string,
+    mode: 'user' | 'admin'
+  ) => {
+    const baseUser =
+      mode === 'admin'
+        ? mockUsers.authority
+        : mockUsers.citizen;
+
+    return {
+      ...baseUser,
+      id: `${mode}-${Date.now()}`,
+      email: email.trim().toLowerCase(),
+      name: buildDisplayNameFromEmail(
+        email,
+        baseUser.name
+      ),
+    };
+  };
+
+  const getSavedAccounts = () => {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) {
+        return {
+          user: {
+            email: 'citizen@civicconnect.in',
+            password: 'citizen123',
+          },
+          admin: {
+            email: 'admin@civicconnect.in',
+            password: 'admin123',
+          },
+        };
+      }
+
+      const parsed = JSON.parse(raw) || {};
+
+      return {
+        user: {
+          email: 'citizen@civicconnect.in',
+          password: 'citizen123',
+          ...(parsed?.user || {}),
+        },
+        admin: {
+          email: 'laksith0987@gmail.com',
+          password: 'laksith0987@',
+        },
+      };
+    } catch {
+      return {
+        user: {
+          email: 'citizen@civicconnect.in',
+          password: 'citizen123',
+        },
+        admin: {
+          email: 'laksith0987@gmail.com',
+          password: 'laksith0987@',
+        },
+      };
+    }
+  };
+
   // ===================================================
   // CHALLENGES
   // ===================================================
 
-  const [challenges, setChallenges] = useState<Challenge[]>(
-    mockChallenges
-  );
+  const [challenges, setChallenges] = useState<Challenge[]>(() => {
+    try {
+      const raw = localStorage.getItem('civicconnect_challenges_v1');
+      if (raw) {
+        return JSON.parse(raw) as Challenge[];
+      }
+    } catch {
+      // Ignore invalid local storage payloads.
+    }
+
+    return mockChallenges;
+  });
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(
+        'civicconnect_challenges_v1',
+        JSON.stringify(challenges)
+      );
+    } catch {
+      // Ignore storage failures in constrained environments.
+    }
+  }, [challenges]);
 
   // ===================================================
   // OTHER STATE
@@ -167,7 +300,7 @@ export const AppProvider = ({
         );
 
         const response = await fetch(
-          'http://localhost:5000/reports'
+          '/api/v1/challenges'
         );
 
         if (!response.ok) {
@@ -309,15 +442,42 @@ export const AppProvider = ({
             } as Challenge;
           });
 
-        setChallenges(formattedChallenges);
+        setChallenges((prev) => {
+          const nextChallenges =
+            formattedChallenges.length > 0
+              ? formattedChallenges
+              : prev;
+
+          try {
+            localStorage.setItem(
+              'civicconnect_challenges_v1',
+              JSON.stringify(nextChallenges)
+            );
+          } catch {
+            // Ignore storage failures in constrained environments.
+          }
+
+          return nextChallenges;
+        });
       } catch (error) {
         console.error(
           '❌ Could not load reports from backend:',
           error
         );
 
-        // Keep mock data if backend is unavailable
-        setChallenges(mockChallenges);
+        // Keep stored local data if backend is unavailable
+        try {
+          const saved = localStorage.getItem(
+            'civicconnect_challenges_v1'
+          );
+          if (saved) {
+            setChallenges(JSON.parse(saved));
+          } else {
+            setChallenges(mockChallenges);
+          }
+        } catch {
+          setChallenges(mockChallenges);
+        }
       }
     };
 
@@ -362,6 +522,135 @@ export const AppProvider = ({
   };
 
   // ===================================================
+  // AUTHENTICATION
+  // ===================================================
+
+  const loginWithCredentials = (
+    email: string,
+    password: string,
+    mode: 'user' | 'admin'
+  ) => {
+    const normalizedEmail = email.trim().toLowerCase();
+    const trimmedPassword = password.trim();
+
+    if (!normalizedEmail || !trimmedPassword) {
+      return {
+        success: false,
+        message: 'Please enter both email and password to continue.',
+      };
+    }
+
+    const defaultCredentials = {
+      user: {
+        email: 'citizen@civicconnect.in',
+        password: 'citizen123',
+        user: mockUsers.citizen,
+      },
+      admin: {
+        email: 'laksith0987@gmail.com',
+        password: 'laksith0987@',
+        user: mockUsers.authority,
+      },
+    }[mode];
+
+    if (mode === 'admin') {
+      if (
+        normalizedEmail !== defaultCredentials.email.toLowerCase() ||
+        trimmedPassword !== defaultCredentials.password
+      ) {
+        return {
+          success: false,
+          message: 'Invalid admin credentials. Please use the official admin login.',
+        };
+      }
+
+      setCurrentUser(defaultCredentials.user);
+      setIsAuthenticated(true);
+
+      addToast({
+        type: 'success',
+        title: 'Welcome back, Dr. Rajesh Verma',
+        message: 'Admin dashboard unlocked for emergency response coordination.',
+      });
+
+      return {
+        success: true,
+        message: 'Login successful',
+      };
+    }
+
+    const savedAccounts = getSavedAccounts();
+    const storedCredentials = savedAccounts[mode];
+    const accountMatch =
+      (storedCredentials &&
+        normalizedEmail === storedCredentials.email.toLowerCase() &&
+        trimmedPassword === storedCredentials.password) ||
+      (normalizedEmail === defaultCredentials.email.toLowerCase() &&
+        trimmedPassword === defaultCredentials.password);
+
+    const signedInUser = buildUserFromCredentials(
+      normalizedEmail,
+      mode
+    );
+
+    if (!accountMatch) {
+      try {
+        const nextStorage = {
+          ...savedAccounts,
+          [mode]: {
+            email: normalizedEmail,
+            password: trimmedPassword,
+          },
+        };
+
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(nextStorage));
+      } catch {
+        // Ignore storage-related issues in restricted environments.
+      }
+
+      setCurrentUser(signedInUser);
+      setIsAuthenticated(true);
+
+      addToast({
+        type: 'success',
+        title: `Welcome, ${signedInUser.name}`,
+        message: 'Your custom user account has been saved for future logins.',
+      });
+
+      return {
+        success: true,
+        message: 'Login successful',
+      };
+    }
+
+    setCurrentUser(signedInUser);
+    setIsAuthenticated(true);
+
+    addToast({
+      type: 'success',
+      title: `Welcome back, ${signedInUser.name}`,
+      message: 'Citizen dashboard unlocked for reporting and tracking community issues.',
+    });
+
+    return {
+      success: true,
+      message: 'Login successful',
+    };
+  };
+
+  const logout = () => {
+    setIsAuthenticated(false);
+    setCurrentUser(mockUsers.citizen);
+    setCurrentView('login');
+
+    addToast({
+      type: 'info',
+      title: 'Signed out',
+      message: 'You have been redirected to the login screen.',
+    });
+  };
+
+  // ===================================================
   // SWITCH USER ROLE
   // ===================================================
 
@@ -373,6 +662,7 @@ export const AppProvider = ({
       mockUsers.citizen;
 
     setCurrentUser(selected);
+    setIsAuthenticated(true);
 
     addToast({
       type: 'info',
@@ -417,10 +707,25 @@ export const AppProvider = ({
   const addNewChallenge = (
     newChallenge: Challenge
   ) => {
-    setChallenges((prev) => [
-      newChallenge,
-      ...prev,
-    ]);
+    setChallenges((prev) => {
+      const next = [
+        newChallenge,
+        ...prev.filter(
+          (challenge) => challenge.id !== newChallenge.id
+        ),
+      ];
+
+      try {
+        localStorage.setItem(
+          'civicconnect_challenges_v1',
+          JSON.stringify(next)
+        );
+      } catch {
+        // Ignore storage failures in constrained environments.
+      }
+
+      return next;
+    });
 
     setCurrentUser((prev) => ({
       ...prev,
@@ -823,6 +1128,12 @@ export const AppProvider = ({
     <AppContext.Provider
       value={{
         currentUser,
+
+        isAuthenticated,
+
+        loginWithCredentials,
+
+        logout,
 
         switchUserRole,
 

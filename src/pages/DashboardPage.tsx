@@ -32,7 +32,9 @@ export const DashboardPage: React.FC = () => {
   const [filterCategory, setFilterCategory] = useState<string>('All');
 
   // Stats
-  const myReports = challenges.filter((c) => c.reportedBy.id === currentUser.id);
+  const myReports = challenges.filter(
+    (c) => c.reporterId === currentUser.id || c.reporterName === currentUser.name
+  );
   const totalReported = challenges.length;
   const inProgressCount = challenges.filter((c) =>
     ['Under_Review', 'Organization_Assigned', 'Solution_Development', 'Implementation'].includes(c.status)
@@ -53,45 +55,48 @@ export const DashboardPage: React.FC = () => {
   return (
     <div className="space-y-8 pb-12">
       {/* Top Welcome Banner */}
-      <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/90 shadow-xs flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
-        <div className="space-y-2 max-w-2xl">
-          <div className="flex items-center gap-2">
-            <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-blue-50 text-blue-700 border border-blue-200">
-              Citizen Operations Center
-            </span>
-            <span className="text-xs font-semibold text-slate-400">
-              📍 {currentUser.city}, {currentUser.state}
-            </span>
+      <div className="relative overflow-hidden rounded-[30px] border border-slate-200 bg-[linear-gradient(135deg,#0f172a_0%,#1e293b_28%,#0f172a_62%,#111827_100%)] p-6 text-white shadow-[0_24px_60px_rgba(15,23,42,0.18)] sm:p-8">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(56,189,248,0.18),transparent_32%),radial-gradient(circle_at_bottom_right,_rgba(148,163,184,0.16),transparent_30%)]" />
+        <div className="relative z-10 flex flex-col items-start justify-between gap-6 md:flex-row md:items-center">
+          <div className="max-w-2xl space-y-3">
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="rounded-full border border-cyan-400/30 bg-cyan-400/12 px-2.5 py-1 text-[11px] font-bold tracking-[0.18em] text-cyan-100 uppercase">
+                Civic Operations
+              </span>
+              <span className="text-xs font-medium text-slate-300">
+                📍 {currentUser.city}, {currentUser.state}
+              </span>
+            </div>
+            <h1 className="text-2xl font-black tracking-tight text-white sm:text-3xl">
+              Welcome back, {currentUser.name}
+            </h1>
+            <p className="max-w-xl text-sm leading-relaxed text-slate-300">
+              Monitor civic incidents, review AI-prioritized updates, and coordinate response teams with a clean and enterprise-ready operating view.
+            </p>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
-            Welcome back, {currentUser.name}
-          </h1>
-          <p className="text-sm text-slate-600 leading-relaxed">
-            Monitor real-time civic disaster reports, AI automated triage classifications, and collaborate with municipal agencies to resolve critical hazards.
-          </p>
-        </div>
 
-        <div className="flex flex-wrap items-center gap-3 shrink-0">
-          <button
-            onClick={() => setCurrentView('report')}
-            className="px-5 py-3 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs sm:text-sm shadow-md shadow-blue-600/20 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center gap-2"
-          >
-            <PlusCircle size={16} />
-            <span>Report New Challenge</span>
-          </button>
-          <button
-            onClick={() => setCurrentView('map')}
-            className="px-4 py-3 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs sm:text-sm transition-all flex items-center gap-2"
-          >
-            <MapPin size={16} className="text-blue-600" />
-            <span>Open Live Map</span>
-          </button>
+          <div className="flex flex-wrap items-center gap-3 shrink-0">
+            <button
+              onClick={() => setCurrentView('report')}
+              className="flex items-center gap-2 rounded-2xl bg-white px-5 py-3 text-xs font-bold text-slate-900 shadow-lg shadow-slate-950/15 transition-all hover:-translate-y-0.5 hover:bg-slate-100"
+            >
+              <PlusCircle size={16} className="text-sky-600" />
+              <span>Report New Challenge</span>
+            </button>
+            <button
+              onClick={() => setCurrentView('map')}
+              className="flex items-center gap-2 rounded-2xl border border-white/15 bg-white/5 px-4 py-3 text-xs font-bold text-white transition-all hover:bg-white/10"
+            >
+              <MapPin size={16} className="text-cyan-300" />
+              <span>Open Live Map</span>
+            </button>
+          </div>
         </div>
       </div>
 
       {/* Metric Cards Grid */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-        <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-2xs hover:border-blue-200 transition-colors">
+        <div className="bg-white/80 backdrop-blur-sm p-5 rounded-2xl border border-slate-200 shadow-[0_14px_30px_rgba(15,23,42,0.04)] hover:border-blue-200 transition-colors">
           <div className="flex items-center justify-between text-slate-400 mb-2">
             <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
               Active Challenges
@@ -106,7 +111,7 @@ export const DashboardPage: React.FC = () => {
           </div>
         </div>
 
-        <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-2xs hover:border-amber-200 transition-colors">
+        <div className="bg-white/80 backdrop-blur-sm p-5 rounded-2xl border border-slate-200 shadow-[0_14px_30px_rgba(15,23,42,0.04)] hover:border-amber-200 transition-colors">
           <div className="flex items-center justify-between text-slate-400 mb-2">
             <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
               In Remediation
@@ -121,7 +126,7 @@ export const DashboardPage: React.FC = () => {
           </div>
         </div>
 
-        <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-2xs hover:border-emerald-200 transition-colors">
+        <div className="bg-white/80 backdrop-blur-sm p-5 rounded-2xl border border-slate-200 shadow-[0_14px_30px_rgba(15,23,42,0.04)] hover:border-emerald-200 transition-colors">
           <div className="flex items-center justify-between text-slate-400 mb-2">
             <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
               Resolved Hazards
@@ -136,7 +141,7 @@ export const DashboardPage: React.FC = () => {
           </div>
         </div>
 
-        <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-2xs hover:border-purple-200 transition-colors">
+        <div className="bg-white/80 backdrop-blur-sm p-5 rounded-2xl border border-slate-200 shadow-[0_14px_30px_rgba(15,23,42,0.04)] hover:border-purple-200 transition-colors">
           <div className="flex items-center justify-between text-slate-400 mb-2">
             <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
               Reputation Points
@@ -185,7 +190,7 @@ export const DashboardPage: React.FC = () => {
               <div
                 key={ch.id}
                 onClick={() => handleOpenChallenge(ch)}
-                className="bg-white rounded-2xl p-5 border border-slate-200 shadow-2xs hover:shadow-md hover:border-blue-200 cursor-pointer transition-all group"
+                className="bg-white/85 rounded-2xl p-5 border border-slate-200 shadow-[0_12px_30px_rgba(15,23,42,0.04)] hover:shadow-lg hover:border-blue-200 cursor-pointer transition-all group"
               >
                 <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
                   <div className="flex items-center gap-2">
@@ -273,7 +278,7 @@ export const DashboardPage: React.FC = () => {
               </div>
               <div>
                 <h3 className="text-base font-bold">Regional AI Risk Forecast</h3>
-                <span className="text-[10px] text-slate-400">SIH NLP Engine • Active Radar</span>
+                <span className="text-[10px] text-slate-400">Civic AI Engine • Active Radar</span>
               </div>
             </div>
 

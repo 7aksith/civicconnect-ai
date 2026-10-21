@@ -16,7 +16,7 @@ export const SettingsPage: React.FC = () => {
   const { addToast } = useApp();
 
   const [apiUrl, setApiUrl] = useState<string>(
-    import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api'
+    import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000'
   );
   const [isTestingApi, setIsTestingApi] = useState(false);
   const [apiStatus, setApiStatus] = useState<'idle' | 'success' | 'mock'>('idle');
@@ -38,7 +38,7 @@ export const SettingsPage: React.FC = () => {
         setApiStatus('success');
         addToast({
           type: 'success',
-          title: 'FastAPI Backend Online',
+          title: 'Backend Online',
           message: `Connected to ${apiUrl} successfully.`,
         });
       } else {
@@ -49,7 +49,7 @@ export const SettingsPage: React.FC = () => {
       addToast({
         type: 'info',
         title: 'Operating in Autonomous Mock AI Mode',
-        message: `FastAPI server at ${apiUrl} not detected. Frontend is running in independent hackathon mode.`,
+        message: `FastAPI server at ${apiUrl} not detected. Frontend is running in standalone mode for local testing.`,
       });
     } finally {
       setIsTestingApi(false);
@@ -61,7 +61,7 @@ export const SettingsPage: React.FC = () => {
     addToast({
       type: 'info',
       title: 'Local Storage Restored',
-      message: 'Reloading default SIH26043 challenge registry.',
+      message: 'Reloading the default civic challenge registry.',
     });
     setTimeout(() => {
       window.location.reload();
@@ -93,24 +93,24 @@ export const SettingsPage: React.FC = () => {
           </div>
           <div>
             <h3 className="text-base font-bold text-slate-900">
-              Python FastAPI Backend Integration
+              CivicConnect Backend Integration
             </h3>
             <p className="text-xs text-slate-500">
-              Configured to connect seamlessly to Python FastAPI ML endpoints
+              Connect the dashboard to the live civic API and MySQL data service.
             </p>
           </div>
         </div>
 
         <div className="space-y-3">
           <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider">
-            FastAPI Base URL (`VITE_API_BASE_URL`)
+            API Base URL
           </label>
           <div className="flex flex-col sm:flex-row items-center gap-3">
             <input
               type="text"
               value={apiUrl}
               onChange={(e) => setApiUrl(e.target.value)}
-              placeholder="http://localhost:8000/api"
+              placeholder="http://localhost:5000"
               className="flex-1 w-full px-4 py-2.5 rounded-xl border border-slate-200 text-xs font-mono focus:border-blue-500 outline-none"
             />
             <button
@@ -118,32 +118,23 @@ export const SettingsPage: React.FC = () => {
               disabled={isTestingApi}
               className="w-full sm:w-auto px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl transition-colors shadow-2xs whitespace-nowrap"
             >
-              {isTestingApi ? 'Testing...' : 'Test Health Endpoint'}
+              {isTestingApi ? 'Testing...' : 'Test Backend'}
             </button>
           </div>
 
           {apiStatus === 'success' && (
             <div className="flex items-center gap-2 text-xs font-bold text-emerald-700 bg-emerald-50 p-3 rounded-xl border border-emerald-200">
               <CheckCircle2 size={16} className="text-emerald-600 shrink-0" />
-              <span>Connected to live FastAPI server ({apiUrl})</span>
+              <span>Connected to live backend ({apiUrl})</span>
             </div>
           )}
 
           {apiStatus === 'mock' && (
             <div className="flex items-center gap-2 text-xs font-bold text-blue-800 bg-blue-50 p-3 rounded-xl border border-blue-200">
               <AlertCircle size={16} className="text-blue-600 shrink-0" />
-              <span>Independent Mode: Using high-fidelity mock AI triage engine with sub-second simulation</span>
+              <span>Backend is unavailable; local demo data is being used until the service is started.</span>
             </div>
           )}
-
-          <div className="p-3.5 bg-slate-50 rounded-2xl border border-slate-200/80 text-xs text-slate-600 space-y-1">
-            <div className="font-bold text-slate-800">Supported REST Endpoints in `src/services/api.ts`:</div>
-            <div className="font-mono text-[11px] text-slate-500">
-              • POST /v1/ai/analyze (Distress NLP classification & severity) <br />
-              • POST /v1/ai/detect-duplicates (Geospatial clustering) <br />
-              • POST /v1/ai/match-partners (Multi-criteria expert routing)
-            </div>
-          </div>
         </div>
       </div>
 
@@ -239,12 +230,12 @@ export const SettingsPage: React.FC = () => {
         </div>
       </div>
 
-      {/* Reset Cache / Prototype Database */}
+      {/* Reset Local Data */}
       <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm flex items-center justify-between gap-4">
         <div>
-          <h3 className="text-sm font-bold text-slate-900">Reset Prototype Database</h3>
+          <h3 className="text-sm font-bold text-slate-900">Reset Local Data</h3>
           <p className="text-xs text-slate-500">
-            Restores mock challenge registry and resets test reports for hackathon evaluation.
+            Clears local session cache and restores a clean civic workspace for testing.
           </p>
         </div>
 
@@ -253,7 +244,7 @@ export const SettingsPage: React.FC = () => {
           className="px-4 py-2.5 rounded-xl border border-red-200 text-red-600 hover:bg-red-50 text-xs font-bold transition-colors shrink-0 flex items-center gap-1.5"
         >
           <RotateCcw size={14} />
-          <span>Reset Demo Data</span>
+          <span>Reset Local Data</span>
         </button>
       </div>
     </div>

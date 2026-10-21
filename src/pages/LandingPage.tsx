@@ -94,82 +94,51 @@ export const LandingPage: React.FC = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 selection:bg-blue-600 selection:text-white">
-      {/* Top Banner: SIH 2026 Announcement */}
-      <div className="bg-slate-900 text-slate-300 text-xs py-2 px-4 border-b border-slate-800">
-        <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2">
-          <div className="flex items-center gap-2">
-            <span className="px-2 py-0.5 rounded font-extrabold bg-blue-600 text-white text-[10px] tracking-wider uppercase">
-              SIH 2026
-            </span>
-            <span className="font-semibold text-white">Smart India Hackathon 2026</span>
-            <span className="text-slate-400 hidden sm:inline">• Problem SIH26043: Crowdsourcing Societal Challenges (Disaster Management)</span>
-          </div>
-          <div className="flex items-center gap-3 text-slate-400 text-[11px]">
-            <span>Team: <strong className="text-white">Tech Manias</strong></span>
-            <span>Category: <strong className="text-white">Software</strong></span>
-          </div>
-        </div>
-      </div>
-
+    <div className="min-h-screen bg-slate-950 text-slate-100 selection:bg-cyan-500 selection:text-slate-950">
       {/* Hero Section */}
-      <section className="relative overflow-hidden pt-12 pb-20 lg:pt-20 lg:pb-28 border-b border-slate-200/80 bg-gradient-to-b from-white via-slate-50 to-slate-100/50">
-        {/* Subtle grid pattern */}
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#f1f5f9_1px,transparent_1px),linear-gradient(to_bottom,#f1f5f9_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] pointer-events-none" />
+      <section className="relative overflow-hidden border-b border-slate-800 bg-[radial-gradient(circle_at_top,_rgba(34,211,238,0.15),transparent_35%),linear-gradient(135deg,#020817_0%,#0f172a_42%,#111827_100%)] pt-12 pb-20 lg:pt-20 lg:pb-28">
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(148,163,184,0.08)_1px,transparent_1px),linear-gradient(to_bottom,rgba(148,163,184,0.08)_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] pointer-events-none" />
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="max-w-3xl mx-auto text-center">
-            {/* Pill Tag */}
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-50 border border-blue-200 text-blue-700 text-xs font-bold mb-6 shadow-2xs">
-              <Sparkles size={14} className="text-blue-600" />
-              <span>National Civic Technology Platform</span>
-              <span className="w-1 h-1 rounded-full bg-blue-400" />
-              <span>AI-Powered Disaster Triage</span>
+        <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-3xl text-center">
+            <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-cyan-500/30 bg-cyan-500/10 px-3.5 py-1.5 text-xs font-bold text-cyan-200">
+              <Sparkles size={14} className="text-cyan-300" />
+              <span>National Civic Resilience Platform</span>
+              <span className="h-1 w-1 rounded-full bg-cyan-400" />
+              <span>AI-Powered Response</span>
             </div>
 
-            {/* Main Headline */}
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-slate-900 tracking-tight leading-[1.15]">
+            <h1 className="text-4xl font-black tracking-tight text-white sm:text-5xl lg:text-6xl">
               Turn community problems into{' '}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-cyan-600 to-blue-700">
-                real-world solutions.
+              <span className="bg-gradient-to-r from-cyan-300 via-blue-400 to-sky-500 bg-clip-text text-transparent">
+                real-world outcomes.
               </span>
             </h1>
 
-            {/* Subtitle */}
-            <p className="mt-6 text-lg sm:text-xl text-slate-600 leading-relaxed font-normal">
-              Empowering citizens to report urban flooding, slope instability, and infrastructure failures via text, photos, voice, and location. CivicConnect AI categorizes, deduplicates, and connects cases with emergency authorities, NGOs, and technical experts.
+            <p className="mt-6 text-lg font-normal leading-relaxed text-slate-300 sm:text-xl">
+              Empowering citizens to report flooding, infrastructure failures, and public safety issues with secure access, live intelligence, and direct coordination with emergency teams.
             </p>
 
-            {/* CTA Buttons */}
             <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
               <button
-                onClick={() => setCurrentView('report')}
-                className="px-7 py-3.5 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm sm:text-base shadow-xl shadow-blue-600/25 hover:shadow-blue-600/35 hover:-translate-y-0.5 transition-all flex items-center gap-2.5"
+                onClick={() => setCurrentView('login')}
+                className="flex items-center gap-2.5 rounded-2xl bg-cyan-500 px-7 py-3.5 text-sm font-bold text-slate-950 shadow-xl shadow-cyan-900/35 transition-all hover:-translate-y-0.5 hover:bg-cyan-400 sm:text-base"
               >
-                <span>Report a Challenge</span>
+                <span>Citizen Login</span>
                 <ArrowRight size={18} />
               </button>
 
               <button
-                onClick={() => setCurrentView('explore')}
-                className="px-7 py-3.5 rounded-2xl bg-white hover:bg-slate-50 text-slate-800 font-bold text-sm sm:text-base border border-slate-200 shadow-sm hover:border-slate-300 transition-all flex items-center gap-2"
+                onClick={() => setCurrentView('login-admin')}
+                className="flex items-center gap-2.5 rounded-2xl bg-emerald-500 px-7 py-3.5 text-sm font-bold text-white shadow-xl shadow-emerald-900/30 transition-all hover:-translate-y-0.5 hover:bg-emerald-400 sm:text-base"
               >
-                <span>Explore Live Challenges</span>
-                <ChevronRight size={18} className="text-slate-400" />
-              </button>
-
-              <button
-                onClick={() => setCurrentView('dashboard')}
-                className="px-5 py-3.5 rounded-2xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-sm sm:text-base shadow-md transition-all flex items-center gap-2"
-              >
-                <Cpu size={18} className="text-cyan-400" />
-                <span>Open Dashboard</span>
+                <span>Admin Login</span>
+                <ShieldCheck size={18} />
               </button>
             </div>
 
-            {/* Quick Demo Hint */}
-            <p className="mt-4 text-xs text-slate-500 font-medium">
-              💡 No account needed to test — click any button above to explore all features
+            <p className="mt-4 text-xs font-medium text-slate-400">
+              Secure access for citizens and emergency administrators.
             </p>
           </div>
 
@@ -285,7 +254,7 @@ export const LandingPage: React.FC = () => {
           <div className="max-w-2xl">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-400/20 text-cyan-300 text-xs font-bold mb-3 border border-cyan-400/30">
               <ShieldCheck size={14} />
-              <span>SIH 2026 Theme: Disaster Management</span>
+              <span>Disaster Management Operations</span>
             </div>
             <h3 className="text-2xl sm:text-3xl font-black tracking-tight leading-tight">
               Rapid Response Protocol for Flash Floods, Landslides & Grid Failures
@@ -324,11 +293,8 @@ export const LandingPage: React.FC = () => {
                 <span>CivicConnect<span className="text-cyan-400">AI</span></span>
               </div>
               <p className="text-slate-400 text-xs max-w-sm leading-relaxed">
-                Smart India Hackathon 2026 project by Team Tech Manias. Building national-scale civic crowdsourcing and disaster mitigation software.
+                CivicConnect AI supports community-driven reporting, field coordination, and fast public-sector response for critical infrastructure and disaster incidents.
               </p>
-              <div className="mt-4 text-[11px] text-slate-500">
-                Problem Statement ID: SIH26043 • Category: Software
-              </div>
             </div>
 
             <div>
@@ -362,7 +328,7 @@ export const LandingPage: React.FC = () => {
 
           <div className="pt-6 flex flex-wrap items-center justify-between gap-4 text-[11px]">
             <div>
-              © 2026 CivicConnect AI • Team Tech Manias • Smart India Hackathon 2026
+              © 2026 CivicConnect AI • Civic Operations Platform
             </div>
             <div className="flex items-center gap-4">
               <span>Privacy Policy</span>

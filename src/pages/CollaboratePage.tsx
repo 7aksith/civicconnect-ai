@@ -90,7 +90,7 @@ export const CollaboratePage: React.FC = () => {
             Multi-Sectoral Coalition
           </span>
           <span className="text-xs font-semibold text-slate-400">
-            SIH Problem SIH26043 Ecosystem
+            Partner Response Network
           </span>
         </div>
         <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">

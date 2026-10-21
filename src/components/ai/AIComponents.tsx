@@ -36,7 +36,7 @@ export const AIAnalysisCard: React.FC<{
             <div className="flex items-center gap-2">
               <h3 className="font-bold text-lg text-white">CivicConnect AI Analysis</h3>
               <span className="px-2 py-0.5 rounded text-[10px] font-extrabold bg-cyan-400/20 text-cyan-300 border border-cyan-400/30 uppercase tracking-wider">
-                SIH26043 Engine
+                AI Engine
               </span>
             </div>
             <p className="text-xs text-slate-400">Deep semantic triage & disaster threat scoring</p>

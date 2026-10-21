@@ -25,7 +25,7 @@ export const ProfilePage: React.FC = () => {
   const [bio, setBio] = useState(currentUser.bio || '');
 
   const myReports = challenges.filter(
-    (c) => c.reportedBy.id === currentUser.id || c.reportedBy.name === currentUser.name
+    (c) => c.reporterId === currentUser.id || c.reporterName === currentUser.name
   );
 
   const badges = [
